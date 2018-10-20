@@ -1,0 +1,30 @@
+body {
+    font-family: 'Google Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    width: 70%;
+    margin: 0 auto;
+}
+.red-text {
+    color: #ff0000;
+}
+.green-text {
+    color: #008000;
+}
+
+input, select {
+    padding: 10px;
+    border: 1px solid #cccccc;
+}
+table {
+    border-spacing: 0;
+}
+
+input[type="button"], input[type="submit"], input[type="reset"], button, .btn {
+    border: 0;
+    color: #fff;
+    background: #b9b4b4;
+    cursor: pointer;
+}
