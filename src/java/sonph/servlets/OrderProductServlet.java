@@ -7,30 +7,21 @@ package sonph.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sonph.shoes.ShoesDAO;
-import sonph.shoes.ShoesDTO;
-import sonph.sizes.SizesDAO;
-import sonph.sizes.SizesDTO;
 
 /**
  *
  * @author Huangshan
  */
-@WebServlet(name = "SearchServlet", urlPatterns = {"/SearchServlet"})
-public class SearchServlet extends HttpServlet {
+@WebServlet(name = "OrderProductServlet", urlPatterns = {"/OrderProductServlet"})
+public class OrderProductServlet extends HttpServlet {
 
-    private final String SEARCH_PAGE = "search.jsp";
+    private final String VIEW_CART_PAGE = "viewCart.jsp";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -44,32 +35,14 @@ public class SearchServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String searchValue = request.getParameter("searchValue");
-        String url = SEARCH_PAGE;
-        Map<ShoesDTO, List> productList = new LinkedHashMap<>();
+        String button = request.getParameter("btnAction");
+        String url = VIEW_CART_PAGE;
         try {
-            if (searchValue != null || searchValue.length() > 0) {
-                ShoesDAO daoShoes = new ShoesDAO();
-                List<ShoesDTO> listShoes = daoShoes.search(searchValue);
-                
-                if (listShoes != null) {
-                    for (ShoesDTO e : listShoes) {
-                        SizesDAO daoSizes = new SizesDAO();
-                        daoSizes.searchWithShoesID(e.getShoesID());
-                        List<SizesDTO> listSizes = daoSizes.getList();
-                        if (listSizes != null) {
-                            productList.put(e, listSizes);
-                        }
-                    }
-                }
-                if (productList.size() >= 0) {
-                    request.setAttribute("LIST", productList);
+            if (button != null) {
+                if (button.equals("OK")){
+                    
                 }
             }
-        } catch(SQLException e) {
-            log("SearchServlet_SQLException: " + e.getMessage());
-        } catch(NamingException e) {
-            log("SearchServlet_NamingException: " + e.getMessage());
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);

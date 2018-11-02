@@ -13,6 +13,8 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+        <script src="js/jquery.js"></script>
+        <script src="js/main.js"></script>
     </head>
     <body>
         <div class="container">
@@ -36,7 +38,7 @@
             <c:if test="${not empty searchValue}">
                 <c:set var="productList" value="${requestScope.LIST}" />
                 <c:if test="${not empty productList}">
-                    
+
                     <div class="search-result">
                         <table class="w-100 bg">
                             <thead>
@@ -50,22 +52,37 @@
                             </thead>
                             <tbody>
                                 <c:forEach var="row" items="${productList}" varStatus="counter">
+
                                 <tr>
-                                    <td>${counter.count}</td>
-                                    <td>${row.key.description}</td>
-                                    <td>${row.key.price}</td>
-                                    <td>
-                                        
-                                        <select name="shoeSize">
-                                            <c:forEach var="sizes" items="${row.value}">
-                                                <option>${sizes.sizes}</option>
-                                            </c:forEach>>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <a href="#">Add cart</a>
-                                    </td>
+                                    <form action="addToCart">
+                                        <td>${counter.count}</td>
+                                        <td>${row.key.description}</td>
+                                        <td id="showPrice${row.key.shoesID}">
+                                            <c:set var="showPrice" value="${row.value[0]}"/>
+                                            ${showPrice.price}
+                                        </td>
+                                        <td>
+                                            <script>
+                                                var sizesPrice = new Map();
+                                            </script>
+                                            <select name="sizesID" id="${row.key.shoesID}" class="select">
+                                                <c:forEach var="sizes" items="${row.value}">
+                                                    <option value="${sizes.id}">Size: ${sizes.sizes}</option>
+                                                    <script>sizesPrice.set("${sizes.id}", ${sizes.price});</script>
+                                                </c:forEach>      
+                                            </select>
+                                            <script>
+                                                shoesSizesPrice.set("${row.key.shoesID}", sizesPrice);
+                                            </script>
+                                        </td>
+                                        <td>
+                                            <input type="hidden" name="shoesID" value="${row.key.shoesID}" />
+                                            <input type="hidden" name="lastSearchValue" value="${searchValue}" />
+                                            <button>Add to cart</button>
+                                        </td>
+                                    </form>
                                 </tr>
+
                             </c:forEach>
                             </tbody>
                         </table>

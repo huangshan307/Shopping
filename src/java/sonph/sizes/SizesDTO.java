@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sonph.dtos;
+package sonph.sizes;
 
 import java.io.Serializable;
 
@@ -11,20 +11,38 @@ import java.io.Serializable;
  *
  * @author Huangshan
  */
-public class ShoesDTO implements Serializable{
+public class SizesDTO implements Serializable{
+    private String id;
     private String shoesID;
-    private String description;
+    private int sizes;
+    private String country;
     private float price;
     private int quantity;
 
-    public ShoesDTO() {
+    public SizesDTO() {
     }
 
-    public ShoesDTO(String shoesID, String description, float price, int quantity) {
+    public SizesDTO(String id, String shoesID, int sizes, String country, float price, int quantity) {
+        this.id = id;
         this.shoesID = shoesID;
-        this.description = description;
+        this.sizes = sizes;
+        this.country = country;
         this.price = price;
         this.quantity = quantity;
+    }
+
+    /**
+     * @return the id
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(String id) {
+        this.id = id;
     }
 
     /**
@@ -42,17 +60,31 @@ public class ShoesDTO implements Serializable{
     }
 
     /**
-     * @return the description
+     * @return the sizes
      */
-    public String getDescription() {
-        return description;
+    public int getSizes() {
+        return sizes;
     }
 
     /**
-     * @param description the description to set
+     * @param sizes the sizes to set
      */
-    public void setDescription(String description) {
-        this.description = description;
+    public void setSizes(int sizes) {
+        this.sizes = sizes;
+    }
+
+    /**
+     * @return the country
+     */
+    public String getCountry() {
+        return country;
+    }
+
+    /**
+     * @param country the country to set
+     */
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     /**

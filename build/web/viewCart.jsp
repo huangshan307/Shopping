@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,49 +18,65 @@
         <div class="container">
             <h1 class="title">View your product</h1>
             <div class="welcome-name">
-                <p>Welcome, <span>Name</span>! (Logout)</p>
+                <p>Welcome, <span>${sessionScope.USER.username}</span>! (<a href="logout">Logout</a>)</p>
             </div>
-            
+
             <div class="w-100 view-cart">
                 <a href="search.jsp">Search</a>
             </div>
-            <div class="search-result">
-                <table class="w-100 bg">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Description</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Sizes</th>
-                            <th>Total</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>This is a description</td>
-                            <td>3</td>
-                            <td>100</td>
-                            <td>38</td>
-                            <td>300</td>
-                            <td>
-                                <input type="checkbox" name="remove" value="REMOVE" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="5">Total</td>
-                            <td>300</td>
-                            <td><button class="btn-primary">Remove</button></td>
-                        </tr>
-                    </tbody>
-                </table>
 
-            </div>            
-            
+            <c:set var="cartObj" value="${sessionScope.CART}" />
+            <c:if test="${not empty cartObj}">
+                <c:if test="${not empty cartObj.list}">
+                    <div class="search-result">
+                        <table class="w-100 bg">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Description</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Sizes</th>
+                                    <th>Total</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <form action="delete" method="GET">
+                                <c:forEach var="row" items="${cartObj.list}" varStatus="counter">
+                                    <c:forEach var="field" items="${row.value}">
+                                        <c:set var="item" value="${field.value}"/>
+                                        <tr>
+                                            <td>${counter.count}</td>
+                                            <td>${item.shoes.description}</td>
+                                            <td>${item.quantity}</td>
+                                            <td>${item.sizes.price}</td>
+                                            <td>${item.sizes.sizes}</td>
+                                            <td>${item.price}</td>
+                                            <td><input type="checkbox" name="remove" value="${item.shoes.shoesID}-${item.sizes.id}" /></td>
+                                        </tr>
+                                    </c:forEach>
+                                </c:forEach>
+                                <tr>
+                                    <td colspan="5">Total</td>
+                                    <td></td>
+                                    <td>
+                                        <button class="btn-primary">Remove</button>
+                                    </td>
+                                </tr>
+                            </form>
+                            </tbody>
+                        </table>
+                    </div> 
+                </c:if>
+            </c:if>
+
+            <c:if test="${empty cartObj.list}">
+                <h2 class="title red-text">No items in your cart!</h2>
+            </c:if>
+
             <div class="w-100">
-                <a href="search.jsp">Check out</a>
+                <a href="checkOut.jsp">Check out</a>
             </div>
         </div>
     </body>

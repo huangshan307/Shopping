@@ -21,16 +21,17 @@ button {
   background-color: #ffffff;
   font-size: 18px;
   cursor: pointer;
-  -webkit-transition-duration: 0.4s;
-  transition-duration: 0.4s;
+
   &:focus {
     outline: 0;
     background-color: #9e9e9e;
     color: #ffffff;
   }
-  &::hover {
+  &:hover {
     background-color: #9e9e9e;
     color: #ffffff;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
   }
 }
 
@@ -43,10 +44,9 @@ button {
   }
 }
 .input-group {
-    & > * {
-        display: block;
-    }
-  
+  & > * {
+    display: block;
+  }
 }
 .input-group > button,
 .search-bar .input-group > * {

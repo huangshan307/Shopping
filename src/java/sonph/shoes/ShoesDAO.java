@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sonph.daos;
+package sonph.shoes;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.naming.NamingException;
-import sonph.dtos.ShoesDTO;
+import sonph.shoes.ShoesDTO;
 import sonph.utils.DBUtils;
 
 /**
@@ -48,7 +48,7 @@ public class ShoesDAO implements Serializable{
         PreparedStatement stm = null;
         ResultSet rs = null;
         
-        String sql = "SELECT shoesID, description, price, quantity FROM tbl_shoes WHERE shoesID LIKE ?";
+        String sql = "SELECT shoesID, description, quantity FROM tbl_shoes WHERE description LIKE ?";
         try {
             conn = DBUtils.makeConnection();
             if (conn != null) {
@@ -59,7 +59,6 @@ public class ShoesDAO implements Serializable{
                     ShoesDTO dto = new ShoesDTO();
                     dto.setShoesID(rs.getString("shoesID"));
                     dto.setDescription(rs.getString("description"));
-                    dto.setPrice(rs.getFloat("price"));
                     dto.setQuantity(rs.getInt("quantity"));
                     
                     this.list.add(dto);
@@ -78,5 +77,44 @@ public class ShoesDAO implements Serializable{
         }
         
         return list;
+    }
+    
+    /**
+     * 
+     * @return 
+     * @param shoesID
+     * @throws javax.naming.NamingException 
+     * @throws java.sql.SQLException
+     */
+    public ShoesDTO getShoes(String shoesID) throws NamingException, SQLException {
+        ShoesDTO dto = new ShoesDTO();
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        String sql = "SELECT shoesID, description, quantity FROM tbl_shoes WHERE shoesID = ?";
+        try {
+             conn = DBUtils.makeConnection();
+             if (conn != null) {
+                 stm = conn.prepareStatement(sql);
+                 stm.setString(1, shoesID);
+                 rs = stm.executeQuery();
+                 if (rs.next()) {
+                     dto.setShoesID(rs.getString("shoesID"));
+                     dto.setDescription(rs.getString("description"));
+                     dto.setQuantity(rs.getInt("quantity"));
+                 }
+             }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return dto;
     }
 }

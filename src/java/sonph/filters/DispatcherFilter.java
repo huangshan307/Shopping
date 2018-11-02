@@ -112,7 +112,7 @@ public class DispatcherFilter implements Filter {
 
             if (resource.length() > 0) {
                 url = resource.substring(0, 1).toUpperCase() + resource.substring(1) + "Servlet";
-                if (resource.lastIndexOf(".html") > 0 || resource.lastIndexOf(".jsp") > 0 || resource.lastIndexOf(".css") > 0) {
+                if (resource.lastIndexOf(".html") > 0 || resource.lastIndexOf(".jsp") > 0 || resource.lastIndexOf(".css") > 0 || resource.lastIndexOf(".js") > 0) {
                     url = resource;
                 }
             }
