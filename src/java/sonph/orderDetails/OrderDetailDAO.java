@@ -3,47 +3,36 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sonph.orders;
+package sonph.orderDetails;
 
 import java.io.Serializable;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import javax.naming.NamingException;
 import sonph.utils.DBUtils;
-import sonph.utils.MD5Text;
 
 /**
  *
  * @author Huangshan
  */
-public class OrderDAO implements Serializable {
+public class OrderDetailDAO implements Serializable {
 
-    
-
-    public String generateCode() throws NoSuchAlgorithmException{
-        long currentDate = System.currentTimeMillis();
-        
-        String md5msg = MD5Text.getHashText(String.valueOf(currentDate));
-        String code = "";
-        for (int i = 0; i < 10; i++) {
-            code += md5msg.charAt(i);
-        }
-        return code;
-    }
-    
-    public boolean insertOrder(String code, String custID, float total) throws NamingException, SQLException {
+    public boolean insertOrderDetail(String productID, String sizesID, int quantity, float unitPrice, float total, String orderID)
+            throws NamingException, SQLException {
         Connection conn = null;
         PreparedStatement stm = null;
-        String sql = "INSERT INTO tbl_order(orderID, orderDate, custID, total) VALUES(?, DEFAULT, ?, ROUND(?, 2))";
+        String sql = "INSERT INTO tbl_orderDetail(productID, sizesID, quantity, unitPrice, total, orderID) VALUES(?, ?, ?, ROUND(? , 2), ROUND(?, 2), ?)";
         try {
             conn = DBUtils.makeConnection();
             if (conn != null) {
                 stm = conn.prepareStatement(sql);
-                stm.setString(1, code);
-                stm.setString(2, custID);
-                stm.setFloat(3, total);
+                stm.setString(1, productID);
+                stm.setString(2, sizesID);
+                stm.setInt(3, quantity);
+                stm.setFloat(4, unitPrice);
+                stm.setFloat(5, total);
+                stm.setString(6, orderID);
                 int result = stm.executeUpdate();
                 return result > 0;
             }

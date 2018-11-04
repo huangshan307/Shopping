@@ -8,6 +8,7 @@ package sonph.servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import sonph.shoes.ShoesDAO;
 import sonph.shoes.ShoesDTO;
+import sonph.shoesSizesDetails.ShoesSizesDetailDAO;
+import sonph.shoesSizesDetails.ShoesSizesDetailDTO;
 import sonph.sizes.SizesDAO;
 import sonph.sizes.SizesDTO;
 
@@ -31,6 +34,7 @@ import sonph.sizes.SizesDTO;
 public class SearchServlet extends HttpServlet {
 
     private final String SEARCH_PAGE = "search.jsp";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -48,27 +52,47 @@ public class SearchServlet extends HttpServlet {
         String url = SEARCH_PAGE;
         Map<ShoesDTO, List> productList = new LinkedHashMap<>();
         try {
-            if (searchValue != null || searchValue.length() > 0) {
-                ShoesDAO daoShoes = new ShoesDAO();
-                List<ShoesDTO> listShoes = daoShoes.search(searchValue);
-                
-                if (listShoes != null) {
-                    for (ShoesDTO e : listShoes) {
-                        SizesDAO daoSizes = new SizesDAO();
-                        daoSizes.searchWithShoesID(e.getShoesID());
-                        List<SizesDTO> listSizes = daoSizes.getList();
-                        if (listSizes != null) {
-                            productList.put(e, listSizes);
+            if (searchValue != null) {
+                if (searchValue.length() > 0) {
+                    ShoesDAO daoShoes = new ShoesDAO();
+                    List<ShoesDTO> listShoes = daoShoes.search(searchValue);
+
+                    if (listShoes != null) {
+                        for (ShoesDTO e : listShoes) {
+
+                            ShoesSizesDetailDAO daoShoesSizes = new ShoesSizesDetailDAO();
+                            daoShoesSizes.searchWithShoesID(e.getShoesID());
+                            List<ShoesSizesDetailDTO> listShoesSizes = daoShoesSizes.getList();
+
+                            List<SizesDTO> listSizes = new ArrayList<>();
+
+                            if (listShoesSizes != null) {
+                                for (ShoesSizesDetailDTO el : listShoesSizes) {
+
+                                    SizesDAO daoSizes = new SizesDAO();
+                                    SizesDTO sizesDto = daoSizes.searchSizes(el);
+                                    if (sizesDto != null) {
+                                        listSizes.add(sizesDto);
+                                    }
+
+                                }
+
+                            }
+
+                            if (!listSizes.isEmpty()) {
+                                productList.put(e, listSizes);
+                            }
                         }
                     }
+                    if (productList.size() >= 0) {
+                        request.setAttribute("LIST", productList);
+                    }
                 }
-                if (productList.size() >= 0) {
-                    request.setAttribute("LIST", productList);
-                }
+
             }
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             log("SearchServlet_SQLException: " + e.getMessage());
-        } catch(NamingException e) {
+        } catch (NamingException e) {
             log("SearchServlet_NamingException: " + e.getMessage());
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);

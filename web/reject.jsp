@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,13 +15,22 @@
         <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
     </head>
     <body>
+        <c:set var="user" value="${sessionScope.USER}"/>
+        <c:if test="${empty user}">
+            <c:redirect url="login.html"/>
+        </c:if>
+            
         <div class="container">
+            
             <h1 class="red-text title">Reject</h1>
+            <p>Welcome, <span>${user.username}</span>! (<a href="logout">Logout</a>)</p>
+            <br>
             <p>
                 All your cart will be removed. Are you sure? 
             </p>
+            <br>
             <form action="orderProduct" method="POST">
-                <div class="w-100">
+                <div class="w-100">          
                     <button name="btnAction" value="OK" class="btn-primary">OK</button>
                     <button name="btnAction" value="Cancel">Cancel</button>
                 </div>

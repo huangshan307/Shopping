@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sonph.sizes;
+package sonph.shoesSizesDetails;
 
 import java.io.Serializable;
 
@@ -11,65 +11,48 @@ import java.io.Serializable;
  *
  * @author Huangshan
  */
-public class SizesDTO implements Serializable{
-    private String id;
-    private int sizes;
-    private String country;
-    
+public class ShoesSizesDetailDTO implements Serializable{
+    private String shoesID;
+    private String sizesID;
     private float price;
     private int quantity;
-
-    public SizesDTO() {
+    
+    public ShoesSizesDetailDTO() {
     }
 
-    public SizesDTO(String id, int sizes, String country, float price, int quantity) {
-        this.id = id;
-        this.sizes = sizes;
-        this.country = country;
+    public ShoesSizesDetailDTO(String shoesID, String sizesID, float price, int quantity) {
+        this.shoesID = shoesID;
+        this.sizesID = sizesID;
         this.price = price;
         this.quantity = quantity;
     }
 
     /**
-     * @return the id
+     * @return the shoesID
      */
-    public String getId() {
-        return id;
+    public String getShoesID() {
+        return shoesID;
     }
 
     /**
-     * @param id the id to set
+     * @param shoesID the shoesID to set
      */
-    public void setId(String id) {
-        this.id = id;
+    public void setShoesID(String shoesID) {
+        this.shoesID = shoesID;
     }
 
     /**
-     * @return the sizes
+     * @return the sizesID
      */
-    public int getSizes() {
-        return sizes;
+    public String getSizesID() {
+        return sizesID;
     }
 
     /**
-     * @param sizes the sizes to set
+     * @param sizesID the sizesID to set
      */
-    public void setSizes(int sizes) {
-        this.sizes = sizes;
-    }
-
-    /**
-     * @return the country
-     */
-    public String getCountry() {
-        return country;
-    }
-
-    /**
-     * @param country the country to set
-     */
-    public void setCountry(String country) {
-        this.country = country;
+    public void setSizesID(String sizesID) {
+        this.sizesID = sizesID;
     }
 
     /**

@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.naming.NamingException;
+import sonph.shoesSizesDetails.ShoesSizesDetailDTO;
 import sonph.utils.DBUtils;
 
 /**
@@ -32,6 +33,41 @@ public class SizesDAO implements Serializable{
         return list;
     }
     
+    public SizesDTO searchSizes(ShoesSizesDetailDTO shoesSizes) throws NamingException, SQLException {
+        SizesDTO sizes = new SizesDTO();
+        Connection conn = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        String sql = "SELECT id, sizes, country FROM tbl_sizes WHERE id = ?";
+        try {
+            conn = DBUtils.makeConnection();
+            if (conn != null) {
+                stm = conn.prepareStatement(sql);
+                stm.setString(1, shoesSizes.getSizesID());
+                rs = stm.executeQuery();
+                if (rs.next()) {
+                    
+                    sizes.setId(rs.getString("id"));
+                    sizes.setSizes(rs.getInt("sizes"));
+                    sizes.setCountry(rs.getString("country"));
+                    sizes.setPrice(shoesSizes.getPrice());
+                    sizes.setQuantity(shoesSizes.getQuantity());
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return sizes;
+    }
+    
     /**
      * 
      * @param shoesID
@@ -45,7 +81,7 @@ public class SizesDAO implements Serializable{
         Connection conn = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
-        String sql = "SELECT id, shoesID, sizes, country, price, quantity FROM tbl_sizes WHERE shoesID = ?";
+        String sql = "SELECT id, sizes, country, price, quantity FROM tbl_sizes WHERE shoesID = ?";
         try {
             conn = DBUtils.makeConnection();
             if (conn != null) {
@@ -55,7 +91,6 @@ public class SizesDAO implements Serializable{
                 while(rs.next()) {
                     SizesDTO sizes = new SizesDTO();
                     sizes.setId(rs.getString("id"));
-                    sizes.setShoesID(rs.getString("shoesID"));
                     sizes.setSizes(rs.getInt("sizes"));
                     sizes.setCountry(rs.getString("country"));
                     sizes.setPrice(rs.getFloat("price"));
@@ -77,46 +112,5 @@ public class SizesDAO implements Serializable{
         }
     }
     
-    /**
-     * 
-     * @param id
-     * @return
-     * @throws NamingException
-     * @throws SQLException 
-     */
-    public SizesDTO getSizesWithID(String id, String shoesID) throws NamingException, SQLException {
-        SizesDTO sizes = new SizesDTO();
-        Connection conn = null;
-        PreparedStatement stm = null;
-        ResultSet rs = null;
-        String sql = "SELECT id, shoesID, sizes, country, price, quantity FROM tbl_sizes WHERE id = ? AND shoesID = ?";
-        try {
-            conn = DBUtils.makeConnection();
-            if (conn != null) {
-                stm = conn.prepareStatement(sql);
-                stm.setString(1, id);
-                stm.setString(2, shoesID);
-                rs = stm.executeQuery();
-                if (rs.next()) {
-                    sizes.setId(rs.getString("id"));
-                    sizes.setShoesID(rs.getString("shoesID"));
-                    sizes.setSizes(rs.getInt("sizes"));
-                    sizes.setCountry(rs.getString("country"));
-                    sizes.setPrice(rs.getFloat("price"));
-                    sizes.setQuantity(rs.getInt("quantity"));
-                }
-            }
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (stm != null) {
-                stm.close();
-            }
-            if (conn != null) {
-                conn.close();
-            }
-        }
-        return sizes;
-    }
+    
 }

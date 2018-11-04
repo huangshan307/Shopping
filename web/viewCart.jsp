@@ -15,10 +15,14 @@
         <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
     </head>
     <body>
+        <c:set var="user" value="${sessionScope.USER}"/>
+        <c:if test="${empty user}">
+            <c:redirect url="login.html"/>
+        </c:if>
         <div class="container">
             <h1 class="title">View your product</h1>
             <div class="welcome-name">
-                <p>Welcome, <span>${sessionScope.USER.username}</span>! (<a href="logout">Logout</a>)</p>
+                <p>Welcome, <span>${user.username}</span>! (<a href="logout">Logout</a>)</p>
             </div>
 
             <div class="w-100 view-cart">
@@ -59,7 +63,9 @@
                                 </c:forEach>
                                 <tr>
                                     <td colspan="5">Total</td>
-                                    <td></td>
+                                    <td>
+                                        ${cartObj.totalPrice}
+                                    </td>
                                     <td>
                                         <button class="btn-primary">Remove</button>
                                     </td>

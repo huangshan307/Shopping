@@ -11,20 +11,31 @@ import java.io.Serializable;
  *
  * @author Huangshan
  */
-public class AccountDTO implements Serializable{
+public class AccountInsertError implements Serializable {
+    
+    private boolean error = false;
+    
     private String username;
     private String password;
-    
     private String lastName;
     private String middleName;
     private String firstName;
-
-    public AccountDTO() {
+    private String address;
+    private String phone;
+    private String usernameExist;
+       
+    /**
+     * @return the error
+     */
+    public boolean isError() {
+        return error;
     }
 
-    public AccountDTO(String username, String password) {
-        this.username = username;
-        this.password = password;
+    /**
+     * @param error the error to set
+     */
+    public void setError(boolean error) {
+        this.error = error;
     }
 
     /**
@@ -84,6 +95,48 @@ public class AccountDTO implements Serializable{
     }
 
     /**
+     * @return the address
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * @param address the address to set
+     */
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    /**
+     * @return the phone
+     */
+    public String getPhone() {
+        return phone;
+    }
+
+    /**
+     * @param phone the phone to set
+     */
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    /**
+     * @return the usernameExist
+     */
+    public String getUsernameExist() {
+        return usernameExist;
+    }
+
+    /**
+     * @param usernameExist the usernameExist to set
+     */
+    public void setUsernameExist(String usernameExist) {
+        this.usernameExist = usernameExist;
+    }
+
+    /**
      * @return the firstName
      */
     public String getFirstName() {
@@ -96,4 +149,5 @@ public class AccountDTO implements Serializable{
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+    
 }

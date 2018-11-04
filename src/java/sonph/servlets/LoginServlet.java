@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import sonph.account.AccountDAO;
 import sonph.account.AccountDTO;
+import sonph.customers.CustomerDAO;
+import sonph.customers.CustomerDTO;
 
 /**
  *
@@ -28,6 +30,8 @@ public class LoginServlet extends HttpServlet {
 
     private final String INVALID_PAGE = "invalid.html";
     private final String SEARCH_PAGE = "search.jsp";
+    private final String LOGIN_PAGE = "login.html";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -45,22 +49,41 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         try {
-            AccountDAO dao = new AccountDAO();
-            AccountDTO user = dao.checkLogin(username, password);
-            if (user != null) {
+            HttpSession session = request.getSession();
+
+            AccountDTO account = (AccountDTO) session.getAttribute("USER");
+            if (account != null) {
                 url = SEARCH_PAGE;
-                //Create a session
-                HttpSession session = request.getSession();
-                session.setAttribute("USER", user);
+            } else {
+                if (username != null || password != null) {
+                    AccountDAO dao = new AccountDAO();
+                    AccountDTO user = dao.checkLogin(username, password);
+                    if (user != null) {
+                        CustomerDAO daoCust = new CustomerDAO();
+                        CustomerDTO cus = daoCust.getCustomer(username);
+
+                        user.setFirstName(cus.getFirstName());
+                        user.setLastName(cus.getLastName());
+                        user.setMiddleName(cus.getMiddleName());
+
+                        url = SEARCH_PAGE;
+                        //Create a session
+
+                        session.setAttribute("USER", user);
+                    }
+                } else {
+                    url = LOGIN_PAGE;
+                }
             }
+
         } catch (SQLException e) {
             log("LoginServlet_SQLException: " + e.getMessage());
-        } catch(NamingException e) {
+        } catch (NamingException e) {
             log("LoginServlet_NamingException: " + e.getMessage());
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
-            
+
             out.close();
         }
     }

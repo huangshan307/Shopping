@@ -13,14 +13,16 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
-        <script src="js/jquery.js"></script>
-        <script src="js/main.js"></script>
     </head>
     <body>
+        <c:set var="user" value="${sessionScope.USER}"/>
+        <c:if test="${empty user}">
+            <c:redirect url="login.html"/>
+        </c:if>
         <div class="container">
             <h1 class="title">Search shoes</h1>
             <div class="welcome-name">
-                <p>Welcome, <span>${sessionScope.USER.username}</span>! (<a href="logout">Logout</a>)</p>
+                <p>Welcome, <span>${user.username}</span>! (<a href="logout">Logout</a>)</p>
             </div>
             <div class="search-bar">
                 <form action="search">
@@ -33,6 +35,8 @@
             <div class="w-100 view-cart">
                 <a href="viewCart.jsp">View your cart</a>
             </div>
+            
+                        <p class="green-text">${requestScope.ORDER_MSG}</p>
 
             <c:set var="searchValue" value="${param.searchValue}" />
             <c:if test="${not empty searchValue}">
@@ -45,7 +49,6 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Description</th>
-                                    <th>Price</th>
                                     <th>Sizes</th>
                                     <th>Action</th>
                                 </tr>
@@ -57,23 +60,12 @@
                                     <form action="addToCart">
                                         <td>${counter.count}</td>
                                         <td>${row.key.description}</td>
-                                        <td id="showPrice${row.key.shoesID}">
-                                            <c:set var="showPrice" value="${row.value[0]}"/>
-                                            ${showPrice.price}
-                                        </td>
                                         <td>
-                                            <script>
-                                                var sizesPrice = new Map();
-                                            </script>
                                             <select name="sizesID" id="${row.key.shoesID}" class="select">
                                                 <c:forEach var="sizes" items="${row.value}">
-                                                    <option value="${sizes.id}">Size: ${sizes.sizes}</option>
-                                                    <script>sizesPrice.set("${sizes.id}", ${sizes.price});</script>
+                                                    <option value="${sizes.id}">Size: ${sizes.sizes} - Price: ${sizes.price}</option>                                   
                                                 </c:forEach>      
                                             </select>
-                                            <script>
-                                                shoesSizesPrice.set("${row.key.shoesID}", sizesPrice);
-                                            </script>
                                         </td>
                                         <td>
                                             <input type="hidden" name="shoesID" value="${row.key.shoesID}" />

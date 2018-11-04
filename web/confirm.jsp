@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,10 +15,14 @@
         <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
     </head>
     <body>
+        <c:set var="user" value="${sessionScope.USER}"/>
+        <c:if test="${empty user}">
+            <c:redirect url="login.html"/>
+        </c:if>
         <div class="container">
-            <h1>Confirm</h1>
+            <h1 class="title">Confirm</h1>
             <div class="welcome-name">
-                <p>Welcome, <span>${sessionScope.USER.username}</span>! (<a href="logout">Logout</a>)</p>
+                <p>Welcome, <span>${user.username}</span>! (<a href="logout">Logout</a>)</p>
             </div>
             <div class="w-100 view-cart">
                 <a href="search.jsp">Search</a>
@@ -28,15 +33,15 @@
                     <tbody>
                         <tr>
                             <td>Customer ID</td>
-                            <td></td>
+                            <td>(Customer ID)</td>
                             <td>OrderID</td>
-                            <td></td>
+                            <td>(OrderID)</td>
                         </tr>
                         <tr>
                             <td>Customer</td>
-                            <td></td>
+                            <td>${user.firstName} ${user.lastName} ${user.middleName}</td>
                             <td>Phone</td>
-                            <td></td>
+                            <td>(Phone number)</td>
                         </tr>
                         <tr>
                             <td>Address</td>
@@ -59,6 +64,7 @@
                         </tr>
                         <tr>
                             <td colspan="4">
+                                
                                 <button name="btnAction" value="OK" class="btn-primary">OK</button>
                                 <button name="btnAction" value="Cancel">Cancel</button>
                             </td>

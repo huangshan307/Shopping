@@ -26,7 +26,7 @@ public class DispatcherFilter implements Filter {
     
     private static final boolean debug = true;
     
-    private final String LOGIN_PAGE = "login.html";
+    private final String LOGIN_SERVLET = "LoginServlet";
 
     // The filter configuration object we are associated with.  If
     // this value is null, this filter instance is not currently
@@ -104,7 +104,7 @@ public class DispatcherFilter implements Filter {
         
         HttpServletRequest req = (HttpServletRequest) request;
         String reqURI = req.getRequestURI();
-        String url = LOGIN_PAGE;
+        String url = LOGIN_SERVLET;
         try {
             
             int index = reqURI.lastIndexOf("/");
@@ -129,7 +129,9 @@ public class DispatcherFilter implements Filter {
             // we still want to execute our after processing, and then
             // rethrow the problem after that.
             
-            t.printStackTrace();
+            //t.printStackTrace();
+            
+            log("DispatcherFilter_Throwable: " + t.getMessage());
         }
 
     }

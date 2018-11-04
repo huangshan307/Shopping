@@ -15,10 +15,14 @@
         <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
     </head>
     <body>
+        <c:set var="user" value="${sessionScope.USER}"/>
+        <c:if test="${empty user}">
+            <c:redirect url="login.html"/>
+        </c:if>
         <div class="container">
             <h1 class="title">Finishing Your Order</h1>
             <div class="welcome-name">
-                <p>Welcome, <span>${sessionScope.USER.username}</span>! (<a href="logout">Logout</a>)</p>
+                <p>Welcome, <span>${user.username}</span>! (<a href="logout">Logout</a>)</p>
             </div>
             <div class="w-100 view-cart">
                 <a href="search.jsp">Search</a>
@@ -31,8 +35,9 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Description</th>
+                                    <th>Product</th>
                                     <th>Quantity</th>
+                                    <th>Size</th>
                                     <th>Price</th>
                                     <th>Total</th>
                                 </tr>
@@ -40,27 +45,26 @@
                             <tbody>
                             <form action="delete" method="GET">
                                 <c:forEach var="row" items="${cartObj.list}" varStatus="counter">
-                                    <c:set var="shoes" value=""/>
-                                    <c:set var="quantity" value="${0}"/>
-                                    <c:set var="price" value="${0}"/>
+
+
                                     <c:forEach var="field" items="${row.value}">
 
                                         <c:set var="item" value="${field.value}"/>
                                         <c:set var="shoes" value="${item.shoes}"/>
-                                        <c:set var="quantity" value="${quantity + item.quantity}"/>
-                                        <c:set var="price" value="${price + shoes.price}"/>
+                                        <tr>
+                                            <td>${counter.count}</td>
+                                            <td>${shoes.description}</td>
+                                            <td>${item.quantity}</td>
+                                            <td>${item.sizes.sizes}</td>
+                                            <td>${item.sizes.price}</td>
+                                            <td>${item.price}</td>
+                                        </tr>
 
                                     </c:forEach>
-                                    <tr>
-                                        <td>${counter.count}</td>
-                                        <td>${shoes.description}</td>
-                                        <td>${quantity}</td>
-                                        <td>${shoes.price}</td>
-                                        <td>${price}</td>
-                                    </tr>
+
                                 </c:forEach>
                                 <tr>
-                                    <td colspan="4">Total</td>
+                                    <td colspan="5"><b>Total</b></td>
                                     <td>${cartObj.totalPrice}</td>
 
                                 </tr>
@@ -68,6 +72,19 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <c:set var="errorItems" value="${sessionScope.ErrorQuantityItem}" />
+                    <c:if test="${not empty errorItems}">
+                        <c:forEach var="row" items="${errorItems}">
+
+                            <c:set var="item" value="${row.key}"/>
+                            <c:set var="quantity" value="${row.value}"/>
+
+                            <div class="red-text">${item.shoes.description}, size: ${item.sizes.sizes} - not enough quantity only have ${quantity}</div>
+                            
+                        </c:forEach>
+                    </c:if>
+                            <br />
 
                     <h2 class="title">Customer Information </h2>
                     <table class="w-100 bg">
@@ -81,24 +98,24 @@
                                 </tr>
                                 <tr>
                                     <td>Customer:</td>
-                                    <td>(Full name of customer)</td>
+                                    <td>${user.firstName} ${user.lastName} ${user.middleName}</td>
                                     <td>Phone: </td>
                                     <td>(Phone number)</td>
                                 </tr>
                                 <tr>
                                     <td class="red-text">Address*:</td>
                                     <td colspan="3" class="input-group">
-                                        <input type="text" name="address" value="${param.address}" class="input-text"/>
+                                        <input type="text" name="address" value="${param.address}" class="input-text" required="required"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="red-text">Receiver*:</td>
                                     <td class="input-group">
-                                        <input type="text" name="receiver" value="${param.receiver}" class="input-text" />
+                                        <input type="text" name="receiver" value="${param.receiver}" class="input-text" required="required"/>
                                     </td>
                                     <td class="red-text">Receiver's Phone*:</td>
                                     <td class="input-group">
-                                        <input type="text" name="receiverPhone" value="${param.receiverPhone}" class="input-text"/>
+                                        <input type="text" name="receiverPhone" value="${param.receiverPhone}" class="input-text" required="required"/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -111,6 +128,7 @@
                             </tbody>
                         </form>
                     </table>
+
                 </c:if>
             </c:if>
             <c:if test="${empty cartObj.list}">

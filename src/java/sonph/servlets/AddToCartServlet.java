@@ -19,6 +19,8 @@ import javax.servlet.http.HttpSession;
 import sonph.cartObj.Cart;
 import sonph.shoes.ShoesDAO;
 import sonph.shoes.ShoesDTO;
+import sonph.shoesSizesDetails.ShoesSizesDetailDAO;
+import sonph.shoesSizesDetails.ShoesSizesDetailDTO;
 import sonph.sizes.SizesDAO;
 import sonph.sizes.SizesDTO;
 
@@ -63,15 +65,21 @@ public class AddToCartServlet extends HttpServlet {
                 ShoesDAO daoShoes = new ShoesDAO();
                 ShoesDTO dtoShoes = daoShoes.getShoes(shoesID);
                 if (dtoShoes != null) {
-                    SizesDAO daoSizes = new SizesDAO();
-                    SizesDTO dtoSizes = daoSizes.getSizesWithID(sizesID, shoesID);
-                    if (dtoSizes != null) {
-                        cartObj.addToCart(dtoShoes, dtoSizes);
-                        url = "SearchServlet?searchValue=" + lastSearchValue;
-                        
-                        //add to session
-                        session.setAttribute("CART", cartObj);
+                    
+                    ShoesSizesDetailDAO daoShoesSizes = new ShoesSizesDetailDAO();
+                    ShoesSizesDetailDTO dtoShoesSizes = daoShoesSizes.getWithShoesIDSizesId(shoesID, sizesID);
+                    
+                    if (dtoShoesSizes != null) {
+                        SizesDAO daoSizes = new SizesDAO();
+                        SizesDTO dtoSizes = daoSizes.searchSizes(dtoShoesSizes);
+                        if (dtoSizes != null) {
+                            cartObj.addToCart(dtoShoes, dtoSizes);
+                            url = "SearchServlet?searchValue=" + lastSearchValue;
+                            
+                            session.setAttribute("CART", cartObj);
+                        }
                     }
+
                 }
             }
         } catch (SQLException e) {

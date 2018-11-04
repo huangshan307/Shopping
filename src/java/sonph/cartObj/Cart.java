@@ -26,6 +26,9 @@ public class Cart implements Serializable {
      * @return the list
      */
     public Map<String, Map<String, Item>> getList() {
+        if (this.list == null) {
+            this.list = new HashMap<>();
+        }
         return list;
     }
 
@@ -41,13 +44,13 @@ public class Cart implements Serializable {
      */
     public float getTotalPrice() {
         float total = 0;
-//        for (String shoesID : this.list.keySet()) {
-//            Map<String, Item> listItem = this.list.get(shoesID);
-//            for (String sizesID : listItem.keySet()) {
-//                Item item = listItem.get(sizesID);
-//                total += item.getPrice();
-//            }
-//        }
+        for (String shoesID : this.list.keySet()) {
+            Map<String, Item> listItem = this.list.get(shoesID);
+            for (String sizesID : listItem.keySet()) {
+                Item item = listItem.get(sizesID);
+                total += item.getPrice();
+            }
+        }
 
         return total;
     }
